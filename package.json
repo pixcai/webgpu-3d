@@ -1,0 +1,28 @@
+{
+  "name": "webgpu-3d",
+  "version": "1.0.0",
+  "description": "WebGPU examples",
+  "main": "src/index.ts",
+  "scripts": {
+    "dev": "webpack --watch --mode development",
+    "prod": "webpack --mode production"
+  },
+  "keywords": [
+    "WebGPU",
+    "Canvas"
+  ],
+  "author": "pixcai<pixcai@163.com>",
+  "license": "MIT",
+  "dependencies": {
+    "@types/node": "^17.0.6",
+    "@webgpu/types": "^0.1.9",
+    "css-loader": "^6.5.1",
+    "style-loader": "^3.3.1",
+    "ts-loader": "^9.2.6",
+    "typescript": "^4.5.4",
+    "webpack": "^5.65.0",
+    "webpack-cli": "^4.9.1",
+    "3d-view-controls": "^2.2.2",
+    "gl-matrix": "^3.4.3"
+  }
+}
