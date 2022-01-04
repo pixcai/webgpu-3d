@@ -11836,10 +11836,23 @@ exports.RenderableObject = RenderableObject;
 class Renderer {
     context;
     options;
+    queue = new Set();
     constructor(context, options) {
         this.context = context;
         this.options = options;
         this.context.configure(this.options);
+    }
+    add(...objects) {
+        objects.forEach((object) => this.queue.add(object));
+        return this;
+    }
+    delete(...objects) {
+        objects.forEach((object) => this.queue.delete(object));
+        return this;
+    }
+    render() {
+        this.queue.forEach(object => object.render());
+        requestAnimationFrame(() => this.render());
     }
     createIndexBuffer(data) {
         const buffer = this.options.device.createBuffer({
@@ -11906,7 +11919,6 @@ class WireframeObject extends RenderableObject {
         encoder.draw(this.data.vertex.length / 3);
         encoder.endPass();
         device.queue.submit([commandEncoder.finish()]);
-        requestAnimationFrame(() => this.render());
     }
     createRenderPipeline() {
         const { device, format } = this.renderer.options;
@@ -12016,7 +12028,6 @@ class LightObject extends RenderableObject {
         encoder.draw(this.data.vertex.length / 3);
         encoder.endPass();
         device.queue.submit([commandEncoder.finish()]);
-        requestAnimationFrame(() => this.render());
     }
     createRenderPipeline() {
         const { device, format } = this.renderer.options;
@@ -13337,8 +13348,8 @@ __webpack_require__(/*! ./index.css */ "./src/index.css");
 const app = document.getElementById('app');
 (0, renderer_1.initRenderer)(app)
     .then((renderer) => {
-    const shape = new objects_1.Cube(renderer);
-    shape.render();
+    const cube = new objects_1.Cube(renderer);
+    renderer.add(cube).render();
 })
     .catch((e) => {
     document.write(e.message);

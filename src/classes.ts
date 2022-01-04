@@ -50,10 +50,27 @@ export class Renderer {
   context: GPUCanvasContext;
   options: RendererOptions;
 
+  private queue: Set<RenderableObject> = new Set();
+
   constructor(context: GPUCanvasContext, options: RendererOptions) {
     this.context = context;
     this.options = options;
     this.context.configure(this.options);
+  }
+
+  add(...objects: RenderableObject[]) {
+    objects.forEach((object) => this.queue.add(object));
+    return this;
+  }
+
+  delete(...objects: RenderableObject[]) {
+    objects.forEach((object) => this.queue.delete(object));
+    return this;
+  }
+
+  render() {
+    this.queue.forEach(object => object.render());
+    requestAnimationFrame(() => this.render());
   }
 
   createIndexBuffer(data: Uint32Array) {
@@ -124,8 +141,8 @@ export class WireframeObject extends RenderableObject {
       mat4.mul(this.vp.viewProjectionMat, this.vp.projectionMat, this.camera.matrix);
     }
     mat4.mul(this.mvpMat, this.vp.viewProjectionMat, this.modelMat);
-
     device.queue.writeBuffer(this.uniform, 0, this.mvpMat as ArrayBuffer);
+
     encoder.setPipeline(this.pipeline);
     encoder.setVertexBuffer(0, this.vertex);
     encoder.setBindGroup(0, this.bindGroup);
@@ -133,7 +150,6 @@ export class WireframeObject extends RenderableObject {
     encoder.endPass();
 
     device.queue.submit([commandEncoder.finish()]);
-    requestAnimationFrame(() => this.render());
   }
 
   createRenderPipeline() {
@@ -260,7 +276,6 @@ export class LightObject extends RenderableObject {
     encoder.endPass();
 
     device.queue.submit([commandEncoder.finish()]);
-    requestAnimationFrame(() => this.render());
   }
 
   createRenderPipeline() {
