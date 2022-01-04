@@ -1,5 +1,5 @@
-import { mat4 } from 'gl-matrix';
-import { createViewProjection } from './helpers';
+import { vec3, mat4 } from 'gl-matrix';
+import { createTransforms, createViewProjection } from './helpers';
 import { defaultShader, lightShader } from './shaders';
 
 const createCamera = require('3d-view-controls');
@@ -19,6 +19,10 @@ export abstract class RenderableObject {
   protected mvpMat: mat4;
   protected modelMat: mat4;
 
+  private translation: vec3 = [0, 0, 0];
+  private rotation: vec3 = [0, 0, 0];
+  private scaling: vec3 = [1, 1, 1];
+
   protected camera: ReturnType<typeof createCamera>;
 
   constructor(renderer: Renderer, data: RenderableData) {
@@ -36,6 +40,26 @@ export abstract class RenderableObject {
     this.modelMat = mat4.create();
 
     this.camera = createCamera(canvas, this.vp.cameraOptions);
+  }
+
+  translate(translation: vec3) {
+    vec3.add(this.translation, this.translation, translation);
+    createTransforms(this.modelMat, this.translation, this.rotation, this.scaling);
+    return this;
+  }
+
+  rotate(rotation: vec3) {
+    vec3.add(this.rotation, this.rotation, rotation);
+    createTransforms(this.modelMat, this.translation, this.rotation, this.scaling);
+    return this;
+  }
+
+  scale(scaling: vec3) {
+    this.scaling[0] = scaling[0];
+    this.scaling[1] = scaling[2];
+    this.scaling[2] = scaling[2];
+    createTransforms(this.modelMat, this.translation, this.rotation, this.scaling);
+    return this;
   }
 
   abstract render(): void;
@@ -68,9 +92,14 @@ export class Renderer {
     return this;
   }
 
-  render() {
-    this.queue.forEach(object => object.render());
-    requestAnimationFrame(() => this.render());
+  render(isAnimation = true) {
+    this.queue.forEach((object) => {
+      object.render()
+      if (isAnimation) {
+        object.rotate([0.01, 0.01, 0.01]);
+      }
+    });
+    requestAnimationFrame(() => this.render(isAnimation));
   }
 
   createIndexBuffer(data: Uint32Array) {
