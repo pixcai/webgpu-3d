@@ -1,0 +1,10 @@
+html, body, canvas {
+  width: 100vw;
+  height: 100vh;
+}
+
+body {
+  margin: 0;
+  overflow: hidden;
+  background-color: #4a4a4a;
+}
