@@ -1,4 +1,4 @@
-import { Scene } from './renderer';
+import { Scene } from '../../renderer';
 
 export const initControl = ({ camera, renderer }: Scene) => {
   const { width, height } = renderer.canvas;
