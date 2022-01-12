@@ -11,18 +11,16 @@ module.exports = {
   },
   module: {
     rules: [{
-      test: /\.js$/,
+      test: /\.[jt]sx?$/,
       exclude: /node_modules/,
-    }, {
-      test: /\.ts$/,
-      use: 'ts-loader',
+      use: 'babel-loader',
     }, {
       test: /\.css$/,
       use: ['style-loader', 'css-loader'],
     }],
   },
   resolve: {
-    extensions: ['.js', '.ts'],
+    extensions: ['.js', '.ts', '.tsx'],
   },
   devtool: 'source-map',
   devServer: {

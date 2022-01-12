@@ -6,6 +6,8 @@ export abstract class Camera {
 }
 
 export class PerspectiveCamera extends Camera {
+  private modelMat = new Matrix4();
+
   protected viewMat = new Matrix4();
   protected projectionMat = new Matrix4();
 
@@ -34,5 +36,25 @@ export class PerspectiveCamera extends Camera {
       -X.dot(eye), -Y.dot(eye), -Z.dot(eye), 1,
     ]);
     Matrix4.mul(this.matrix, this.projectionMat, this.viewMat);
+  }
+
+  translate(dx: number, dy: number, dz: number) {
+    this.modelMat.translate(dx, dy, dz);
+    Matrix4.mul(this.matrix, this.matrix, this.modelMat);
+    this.modelMat.identity();
+  }
+
+  rotate(thetaX: number, thetaY: number, thetaZ: number) {
+    this.modelMat.rotateX(thetaX);
+    this.modelMat.rotateY(thetaY);
+    this.modelMat.rotateZ(thetaZ);
+    Matrix4.mul(this.matrix, this.matrix, this.modelMat);
+    this.modelMat.identity();
+  }
+
+  scale(dx: number, dy: number, dz: number) {
+    this.modelMat.scale(dx, dy, dz);
+    Matrix4.mul(this.matrix, this.matrix, this.modelMat);
+    this.modelMat.identity();
   }
 }

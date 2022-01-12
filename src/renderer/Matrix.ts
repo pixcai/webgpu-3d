@@ -31,6 +31,11 @@ export class Matrix4 {
     ]);
   }
 
+  identity() {
+    this.data.set([1, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1]);
+    return this;
+  }
+
   translate(dx: number, dy: number, dz: number) {
     Matrix4.mul(this, new Matrix4([1, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1, 0, dx, dy, dz, 1]), this);
     return this;
