@@ -1,23 +1,23 @@
 import { RenderableObject, RenderableObjectState, RenderTask } from './RenderableObject';
 import { PerspectiveCamera } from './Camera';
 import Renderer from './Renderer';
-import { Axis, AxisOptions } from './Axis';
+import { Axes, AxesOptions } from './Axes';
 
 export interface SceneOptions {
-  axis: AxisOptions;
+  axes: AxesOptions;
 }
 
 export class Scene {
   renderer: Renderer;
   camera = new PerspectiveCamera();
 
-  private axis: Axis;
+  private axes: Axes;
   private objects: Map<RenderableObject, RenderTask> = new Map();
 
   constructor(renderer: Renderer, options?: SceneOptions) {
     this.renderer = renderer;
-    this.axis = new Axis(options?.axis);
-    this.add(this.axis);
+    this.axes = new Axes(options?.axes);
+    this.add(this.axes);
   }
 
   add(...objects: RenderableObject[]) {
@@ -43,7 +43,7 @@ export class Scene {
     this.renderer.device.queue.submit(commandBuffers);
   }
 
-  showAxis(show = true) {
-    this.axis.state = show ? RenderableObjectState.VISIBLE : RenderableObjectState.HIDDEN;
+  showAxes(show = true) {
+    this.axes.state = show ? RenderableObjectState.VISIBLE : RenderableObjectState.HIDDEN;
   }
 }

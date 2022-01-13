@@ -27,15 +27,15 @@ export const initControl = ({ camera, renderer }: Scene) => {
 
     if (mouse.button === 0) {
       if (e.ctrlKey) {
-        camera.rotate(dy * Math.PI / 180, 0, 0);
+        camera.rotateX(dy / 360);
       } else {
-        camera.rotate(0, dx * Math.PI / 180, 0);
+        camera.rotateY(dx / 360);
       }
     } else if (mouse.button === 2) {
       if (e.ctrlKey) {
         camera.translate(0, dy * dt / height, 0);
       } else {
-        camera.translate(-dx * dt / width, 0, 0);
+        camera.translate(dx * dt / width, 0, 0);
       }
     }
     mouse.x = e.x;
@@ -44,9 +44,8 @@ export const initControl = ({ camera, renderer }: Scene) => {
   });
   renderer.canvas.addEventListener('wheel', (e) => {
     const dt = Date.now() - mouse.t;
-    const dy = 1 - 2 * e.deltaY / (e.clientY * dt);
 
-    camera.scale(dy, dy, dy);
+    camera.translate(0, 0, e.deltaY * dt / 100);
     mouse.t += dt;
   });
 };

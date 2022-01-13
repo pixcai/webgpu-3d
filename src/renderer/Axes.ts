@@ -2,48 +2,38 @@ import { RenderableData, RenderableObject } from './RenderableObject';
 import { Scene } from './Scene';
 import { ShaderType, ShaderLocation } from './Shader';
 
-export interface AxisOptions {
+export interface AxesOptions {
   lines?: number;
+  colors?: number[];
   step?: number;
-  showX?: boolean;
-  showY?: boolean;
-  showZ?: boolean;
 }
 
-const createAxisData = (options: AxisOptions = {}): RenderableData => {
-  const { lines = 50, step = 0.5, showX = true, showY = true, showZ = true } = options;
+const createAxesData = (options: AxesOptions = {}): RenderableData => {
+  const { lines = 20, step = 0.5, colors = [[0.4, 0.4, 0.4], [0.8, 0.8, 0.8]] } = options;
   const half = lines / 2, cs = [], vs = [];
+  let a, b, c, d, n = 0;
 
-  if (showX) {
-    vs.push(half, 0, 0, -half, 0, 0);
-    cs.push(1, 0, 0, 1, 0, 0);
-  }
-  if (showY) {
-    vs.push(0, half, 0, 0, -half, 0);
-    cs.push(0, 1, 0, 0, 1, 0);
-  }
-  if (showZ) {
-    vs.push(0, 0, half, 0, 0, -half);
-    cs.push(0, 0, 1, 0, 0, 1);
-  }
-  for (let i = 0; i < lines / 2; i += step) {
-    vs.push(
-      half, 0, -i, -half, 0, -i, half, 0, i, -half, 0, i,
-      i, 0, half, i, 0, -half, -i, 0, half, -i, 0, -half,
-    );
-    for (let j = 0; j < 8; j++) {
-      cs.push(0.4, 0.4, 0.4);
+  for (let i = -half; i < half; i += step) {
+    for (let j = -half; j < half; j += step) {
+      a = [i, 0, j];
+      b = [i + step, 0, j];
+      c = [i + step, 0, j + step];
+      d = [i, 0, j + step]
+      vs.push(...b, ...a, ...d, ...d, ...c, ...b);
+      cs.push(...colors[n], ...colors[n], ...colors[n], ...colors[n], ...colors[n], ...colors[n]);
+      n = ++n % colors.length;
     }
+    colors.push(colors.shift()!);
   }
   return { color: cs, vertex: vs };
 };
 
-export class Axis extends RenderableObject {
+export class Axes extends RenderableObject {
   data: RenderableData;
 
-  constructor(options?: AxisOptions) {
+  constructor(options?: AxesOptions) {
     super();
-    this.data = createAxisData(options);
+    this.data = createAxesData(options);
   }
 
   commit({ renderer, camera }: Scene) {
@@ -51,7 +41,7 @@ export class Axis extends RenderableObject {
     const vertexCount = vertex.length / 3;
     const colorBuffer = renderer.createVertexBuffer(new Float32Array(color));
     const vertexBuffer = renderer.createVertexBuffer(new Float32Array(vertex));
-    const pipeline = renderer.createRenderPipeline(ShaderType.DEFAULT, { topology: 'line-list' });
+    const pipeline = renderer.createRenderPipeline(ShaderType.DEFAULT);
     const mvpUniformBuffer = renderer.createUniformBuffer(camera.matrix.data.byteLength);
     const mvpBindGroup = renderer.device.createBindGroup({
       layout: pipeline.getBindGroupLayout(0),
