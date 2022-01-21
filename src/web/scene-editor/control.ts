@@ -44,8 +44,9 @@ export const initControl = ({ camera, renderer }: Scene) => {
   });
   renderer.canvas.addEventListener('wheel', (e) => {
     const dt = Date.now() - mouse.t;
+    const df = e.deltaY * dt / 100;
 
-    camera.translate(0, 0, e.deltaY * dt / 100);
+    camera.scale(df, df, df);
     mouse.t += dt;
   });
 };

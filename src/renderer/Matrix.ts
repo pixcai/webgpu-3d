@@ -37,27 +37,27 @@ export class Matrix4 {
   }
 
   translate(dx: number, dy: number, dz: number) {
-    Matrix4.mul(this, new Matrix4([1, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1, 0, dx, dy, dz, 1]), this);
+    Matrix4.mul(this, this, new Matrix4([1, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1, 0, dx, dy, dz, 1]));
     return this;
   }
 
   rotateX(theta: number) {
-    Matrix4.mul(this, new Matrix4([1, 0, 0, 0, 0, Math.cos(theta), Math.sin(theta), 0, 0, -Math.sin(theta), Math.cos(theta), 0, 0, 0, 0, 1]), this);
+    Matrix4.mul(this, this, new Matrix4([1, 0, 0, 0, 0, Math.cos(theta), Math.sin(theta), 0, 0, -Math.sin(theta), Math.cos(theta), 0, 0, 0, 0, 1]));
     return this;
   }
 
   rotateY(theta: number) {
-    Matrix4.mul(this, new Matrix4([Math.cos(theta), 0, -Math.sin(theta), 0, 0, 1, 0, 0, Math.sin(theta), 0, Math.cos(theta), 0, 0, 0, 0, 1]), this);
+    Matrix4.mul(this, this, new Matrix4([Math.cos(theta), 0, -Math.sin(theta), 0, 0, 1, 0, 0, Math.sin(theta), 0, Math.cos(theta), 0, 0, 0, 0, 1]));
     return this;
   }
 
   rotateZ(theta: number) {
-    Matrix4.mul(this, new Matrix4([Math.cos(theta), Math.sin(theta), 0, 0, -Math.sin(theta), Math.cos(theta), 0, 0, 0, 0, 1, 0, 0, 0, 0, 1]), this);
+    Matrix4.mul(this, this, new Matrix4([Math.cos(theta), Math.sin(theta), 0, 0, -Math.sin(theta), Math.cos(theta), 0, 0, 0, 0, 1, 0, 0, 0, 0, 1]));
     return this;
   }
 
   scale(dx: number, dy: number, dz: number) {
-    Matrix4.mul(this, new Matrix4([dx, 0, 0, 0, 0, dy, 0, 0, 0, 0, dz, 0, 0, 0, 0, 1]), this);
+    Matrix4.mul(this, this, new Matrix4([dx, 0, 0, 0, 0, dy, 0, 0, 0, 0, dz, 0, 0, 0, 0, 1]));
     return this;
   }
 }

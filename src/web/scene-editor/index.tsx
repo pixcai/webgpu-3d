@@ -17,7 +17,7 @@ class SceneEditor extends Component {
       const torus = new Geometry.Torus();
       const sphere = new Geometry.Sphere({ u: 6, v: 3 });
 
-      scene.camera.lookAt(new Vector3(0, 4, 6));
+      scene.camera.lookAt(new Vector3(0, 4, 6), new Vector3(0, 0, 0));
       scene.camera.perspective(Math.PI / 3, aspect, 0.1, 100);
       initControl(scene);
     
