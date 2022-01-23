@@ -1,4 +1,4 @@
-import { RenderableObject, RenderableObjectState, RenderTask } from './RenderableObject';
+import { RenderableObject, RenderTask } from './RenderableObject';
 import { PerspectiveCamera } from './Camera';
 import Renderer from './Renderer';
 import { Axes, AxesOptions } from './Axes';
@@ -35,15 +35,11 @@ export class Scene {
     let commandBuffer: GPUCommandBuffer;
 
     this.objects.forEach((renderTask, object) => {
-      if (object.state === RenderableObjectState.VISIBLE) {
+      if (object.isVisible()) {
         commandBuffer = this.renderer.beginRenderTask(renderTask);
         commandBuffers.push(commandBuffer);
       }
     });
     this.renderer.device.queue.submit(commandBuffers);
-  }
-
-  showAxes(show = true) {
-    this.axes.state = show ? RenderableObjectState.VISIBLE : RenderableObjectState.HIDDEN;
   }
 }

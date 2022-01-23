@@ -27,8 +27,8 @@ class SceneEditor extends Component {
     
       function render() {
         scene.render();
-        torus.rotate(0.002, 0.002, 0.002);
-        sphere.rotate(0.002, 0.002, 0.002);
+        torus.rotateX(0.01);
+        sphere.rotateX(0.01);
         requestAnimationFrame(render);
       }
       render();

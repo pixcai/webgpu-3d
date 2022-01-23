@@ -88,13 +88,8 @@ export class Geometry extends RenderableObject<GeometryData> {
   static Sphere: typeof Sphere;
   static Torus: typeof Torus;
 
-  data: GeometryData;
-
-  protected modelMat = new Matrix4();  
-
   constructor(data: GeometryData) {
-    super();
-    this.data = data;
+    super(data);
   }
 
   commit({ renderer, camera }: Scene) {
@@ -126,23 +121,6 @@ export class Geometry extends RenderableObject<GeometryData> {
       renderPassEncoder.setVertexBuffer(ShaderLocation.VERTEX, vertexBuffer);
       renderPassEncoder.draw(vertexCount);
     };
-  }
-
-  translate(dx: number, dy: number, dz: number) {
-    this.modelMat.translate(dx, dy, dz);
-    return this;
-  }
-
-  rotate(thetaX: number, thetaY: number, thetaZ: number) {
-    this.modelMat.rotateX(thetaX);
-    this.modelMat.rotateY(thetaY);
-    this.modelMat.rotateZ(thetaZ);
-    return this;
-  }
-
-  scale(fx: number, fy: number, fz: number) {
-    this.modelMat.scale(fx, fy, fz);
-    return this;
   }
 }
 
