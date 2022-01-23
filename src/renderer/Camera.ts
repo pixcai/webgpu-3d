@@ -38,16 +38,16 @@ export class PerspectiveCamera extends Camera {
     Matrix4.mul(this.matrix, this.projectionMat, this.viewMat.translate(dx, dy, dz));
   }
 
-  rotateX(thetaX: number) {
-    Matrix4.mul(this.matrix, this.projectionMat, this.viewMat.rotateX(thetaX));
+  rotateX(theta: number) {
+    Matrix4.mul(this.matrix, this.projectionMat, this.viewMat.rotateX(theta));
   }
 
-  rotateY(thetaY: number) {
-    Matrix4.mul(this.matrix, this.projectionMat, this.viewMat.rotateY(thetaY));
+  rotateY(theta: number) {
+    Matrix4.mul(this.matrix, this.projectionMat, this.viewMat.rotateY(theta));
   }
 
-  rotateZ(thetaZ: number) {
-    Matrix4.mul(this.matrix, this.projectionMat, this.viewMat.rotateZ(thetaZ));
+  rotateZ(theta: number) {
+    Matrix4.mul(this.matrix, this.projectionMat, this.viewMat.rotateZ(theta));
   }
 
   scale(sx: number, sy: number, sz: number) {

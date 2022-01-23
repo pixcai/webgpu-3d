@@ -20,6 +20,10 @@ export class Scene {
     this.add(this.axes);
   }
 
+  getRenderableObjects() {
+    return Array.from(this.objects.keys());
+  }
+
   add(...objects: RenderableObject[]) {
     objects.forEach((object) => this.objects.set(object, object.commit(this)));
     return this;

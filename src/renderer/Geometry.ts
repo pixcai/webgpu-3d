@@ -1,10 +1,16 @@
 import { Scene } from './Scene';
-import { RenderableData, RenderableObject } from './RenderableObject';
+import { RenderableData, RenderableObject, RenderableObjectKind } from './RenderableObject';
 import { Matrix4 } from './Matrix';
+import { Vector3 } from './Vector';
 import { ShaderType, ShaderLocation } from './Shader';
+import { Vector4 } from './Vector';
 
 export interface GeometryData extends RenderableData {
   normal: number[];
+  OBB: {
+    min: Vector3,
+    max: Vector3,
+  };
 }
 
 export interface SphereOptions {
@@ -41,7 +47,15 @@ const createSphereData = (options: SphereOptions = {}): GeometryData => {
       vs.push(...b, ...a, ...c, ...c, ...b, ...d);
     }
   }
-  return { color: cs, vertex: vs, normal: [] };
+  return {
+    color: cs,
+    vertex: vs,
+    normal: [],
+    OBB: {
+      min: new Vector3(-R, -R, -R),
+      max: new Vector3(R, R, R),
+    },
+  };
 };
 
 export interface TorusOptions {
@@ -81,7 +95,15 @@ const createTorusData = (options: TorusOptions = {}): GeometryData => {
       vs.push(...c, ...a, ...b, ...b, ...d, ...c);
     }
   }
-  return { color: cs, vertex: vs, normal: [] };
+  return {
+    color: cs,
+    vertex: vs,
+    normal: [],
+    OBB: {
+      min: new Vector3(-(R + r), -r, -(R + r)),
+      max: new Vector3(R + r, r, R + r),
+    },
+  };
 };
 
 export class Geometry extends RenderableObject<GeometryData> {
@@ -89,7 +111,7 @@ export class Geometry extends RenderableObject<GeometryData> {
   static Torus: typeof Torus;
 
   constructor(data: GeometryData) {
-    super(data);
+    super(RenderableObjectKind.GEOMETRY_3D, data);
   }
 
   commit({ renderer, camera }: Scene) {
@@ -120,6 +142,17 @@ export class Geometry extends RenderableObject<GeometryData> {
       renderPassEncoder.setVertexBuffer(ShaderLocation.COLOR, colorBuffer);
       renderPassEncoder.setVertexBuffer(ShaderLocation.VERTEX, vertexBuffer);
       renderPassEncoder.draw(vertexCount);
+    };
+  }
+
+  getBoundingBox() {
+    const { min, max } = this.data.OBB;
+    const { x: minX, y: minY, z: minZ } = new Vector4(min.x, min.y, min.z, 1).transform(this.modelMat);
+    const { x: maxX, y: maxY, z: maxZ } = new Vector4(max.x, max.y, max.z, 1).transform(this.modelMat);
+
+    return {
+      min: new Vector3(minX, minY, minZ),
+      max: new Vector3(maxX, maxY, maxZ),
     };
   }
 }

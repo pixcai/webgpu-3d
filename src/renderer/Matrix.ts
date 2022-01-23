@@ -66,10 +66,10 @@ export class Matrix4 {
     det = det !== 0 ? 1 / det : det;
     this.elements.set([
       (a11 * b11 - a12 * b10 + a13 * b09) * det,
-      (a02 * a10 - a01 * a11 - a03 * b09) * det,
+      (a02 * b10 - a01 * b11 - a03 * b09) * det,
       (a31 * b05 - a32 * b04 + a33 * b03) * det,
       (a22 * b04 - a21 * b05 - a23 * b03) * det,
-      (a12 * b04 - a10 * b05 - a13 * b03) * det,
+      (a12 * b08 - a10 * b11 - a13 * b07) * det,
       (a00 * b11 - a02 * b08 + a03 * b07) * det,
       (a32 * b02 - a30 * b05 - a33 * b01) * det,
       (a20 * b05 - a22 * b02 + a23 * b01) * det,
@@ -89,11 +89,11 @@ export class Matrix4 {
     const [x0, x1, x2, x3, y0, y1, y2, y3, z0, z1, z2, z3, w0, w1, w2, w3] = this.elements;
 
     this.elements.set([
-      x0 + x3 * dx, x1 + x3 * dy, x2 + x3 * dz, x3,
-      y0 + y3 * dx, y1 + y3 * dy, y2 + z3 * dz, y3,
-      z0 + z3 * dx, z1 + y3 * dy, z2 + z3 * dz, z3,
-      w0 + w3 * dx, w1 + w3 * dy, w2 + w3 * dz, w3,
-    ]);
+      x0 * dx + y0 * dy + z0 * dz + w0,
+      x1 * dx + y1 * dy + z1 * dz + w1,
+      x2 * dx + y2 * dy + z2 * dz + w2,
+      x3 * dx + y3 * dy + z3 * dz + w3,
+    ], 12);
     return this;
   }
 
@@ -140,10 +140,10 @@ export class Matrix4 {
     const [x0, x1, x2, x3, y0, y1, y2, y3, z0, z1, z2, z3, w0, w1, w2, w3] = this.elements;
 
     this.elements.set([
-      x0 * sx, x1 * sy, x2 * sz, x3,
-      y0 * sx, y1 * sy, y2 * sz, y3,
-      z0 * sx, z1 * sy, z2 * sz, z3,
-      w0 * sx, w1 * sy, w2 * sz, w3,
+      x0 * sx, x1 * sx, x2 * sx, x3 * sx,
+      y0 * sy, y1 * sy, y2 * sy, y3 * sy,
+      z0 * sz, z1 * sz, z2 * sz, z3 * sz,
+      w0, w1, w2, w3,
     ]);
     return this;
   }

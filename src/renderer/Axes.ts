@@ -1,4 +1,4 @@
-import { RenderableData, RenderableObject } from './RenderableObject';
+import { RenderableData, RenderableObject, RenderableObjectKind } from './RenderableObject';
 import { Scene } from './Scene';
 import { ShaderType, ShaderLocation } from './Shader';
 
@@ -29,11 +29,8 @@ const createAxesData = (options: AxesOptions = {}): RenderableData => {
 };
 
 export class Axes extends RenderableObject {
-  data: RenderableData;
-
   constructor(options?: AxesOptions) {
-    super();
-    this.data = createAxesData(options);
+    super(RenderableObjectKind.DEFAULT, createAxesData(options));
   }
 
   commit({ renderer, camera }: Scene) {

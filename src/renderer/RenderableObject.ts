@@ -6,21 +6,27 @@ export interface RenderableData {
   vertex: number[];
 }
 
+export enum RenderableObjectKind {
+  DEFAULT,
+  GEOMETRY_3D,
+}
+
 let globalObjectId = 0;
 
 export type RenderTask = (renderPassEncoder: GPURenderPassEncoder) => void;
 
 export abstract class RenderableObject<T extends RenderableData = RenderableData> {
-  readonly objectId: number;
+  readonly objectId = ++globalObjectId;
   
   protected data: T;
+  readonly kind: RenderableObjectKind;
 
   private visible = true;
   protected modelMat = new Matrix4();
 
-  constructor(data: T) {
+  constructor(kind: RenderableObjectKind, data: T) {
+    this.kind = kind;
     this.data = data;
-    this.objectId = ++globalObjectId;
   }
 
   setVisible(visible: boolean) {

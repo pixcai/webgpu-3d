@@ -1,8 +1,11 @@
-import { Scene } from '../../renderer';
+import { Scene, RenderableObject, Raycaster } from '../../renderer';
 
-export const initControl = ({ camera, renderer }: Scene) => {
+export const initControl = (scene: Scene) => {
+  const { camera, renderer } = scene;
   const { width, height } = renderer.canvas;
+  const raycaster = new Raycaster(scene);
   const mouse = { button: -1, x: 0, y: 0, t: 0 };
+  let selectedObject: RenderableObject | null = null;
 
   document.addEventListener('contextmenu', (e) => {
     e.preventDefault();
@@ -10,6 +13,7 @@ export const initControl = ({ camera, renderer }: Scene) => {
     return false;
   });
   window.addEventListener('mousedown', (e) => {
+    selectedObject = raycaster.intersect(e.x, e.y);
     mouse.button = e.button;
     mouse.x = e.x;
     mouse.y = e.y;
@@ -27,9 +31,18 @@ export const initControl = ({ camera, renderer }: Scene) => {
 
     if (mouse.button === 0) {
       if (e.ctrlKey) {
-        camera.rotateX(dy / 360);
+        if (selectedObject) {
+          selectedObject.rotateX(-dy / 360);
+          selectedObject.rotateY(-dx / 360);
+        } else {
+          camera.rotateX(dy / 360);
+        }
       } else {
-        camera.rotateY(dx / 360);
+        if (selectedObject) {
+          selectedObject.translate(-dx * dt / width, dy * dt / height, 0);
+        } else {
+          camera.rotateY(dx / 360);
+        }
       }
     } else if (mouse.button === 2) {
       if (e.ctrlKey) {
@@ -43,10 +56,11 @@ export const initControl = ({ camera, renderer }: Scene) => {
     mouse.t += dt;
   });
   renderer.canvas.addEventListener('wheel', (e) => {
+    const object = selectedObject || camera;
     const dt = Date.now() - mouse.t;
     const ds = e.deltaY * dt / 100;
 
-    camera.scale(ds, ds, ds);
+    object.scale(ds, ds, ds);
     mouse.t += dt;
   });
 };

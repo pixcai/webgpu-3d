@@ -4,6 +4,8 @@ export * from './Scene';
 export * from './Geometry';
 export * from './Vector';
 export * from './Matrix';
+export * from './Raycaster';
+export * from './RenderableObject';
 
 export async function initRenderer(canvas: HTMLCanvasElement): Promise<Renderer> {
   const context = canvas.getContext('webgpu') as unknown as GPUCanvasContext;
