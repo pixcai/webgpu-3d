@@ -4,7 +4,7 @@ import { ShaderType, ShaderLocation } from './Shader';
 
 export interface AxesOptions {
   lines?: number;
-  colors?: number[];
+  colors?: number[][];
   step?: number;
 }
 
@@ -42,7 +42,7 @@ export class Axes extends RenderableObject {
     const colorBuffer = renderer.createVertexBuffer(new Float32Array(color));
     const vertexBuffer = renderer.createVertexBuffer(new Float32Array(vertex));
     const pipeline = renderer.createRenderPipeline(ShaderType.DEFAULT);
-    const mvpUniformBuffer = renderer.createUniformBuffer(camera.matrix.data.byteLength);
+    const mvpUniformBuffer = renderer.createUniformBuffer(camera.matrix.elements.byteLength);
     const mvpBindGroup = renderer.device.createBindGroup({
       layout: pipeline.getBindGroupLayout(0),
       entries: [{
@@ -50,13 +50,13 @@ export class Axes extends RenderableObject {
         resource: {
           buffer: mvpUniformBuffer,
           offset: 0,
-          size: camera.matrix.data.byteLength,
+          size: camera.matrix.elements.byteLength,
         },
       }],
     });
 
     return (renderPassEncoder: GPURenderPassEncoder) => {
-      renderer.device.queue.writeBuffer(mvpUniformBuffer, 0, camera.matrix.data);
+      renderer.device.queue.writeBuffer(mvpUniformBuffer, 0, camera.matrix.elements.buffer);
       renderPassEncoder.setPipeline(pipeline);
       renderPassEncoder.setBindGroup(0, mvpBindGroup);
       renderPassEncoder.setVertexBuffer(ShaderLocation.COLOR, colorBuffer);

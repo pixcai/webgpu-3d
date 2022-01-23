@@ -35,7 +35,7 @@ export const initControl = ({ camera, renderer }: Scene) => {
       if (e.ctrlKey) {
         camera.translate(0, dy * dt / height, 0);
       } else {
-        camera.translate(dx * dt / width, 0, 0);
+        camera.translate(-dx * dt / width, 0, 0);
       }
     }
     mouse.x = e.x;
@@ -44,9 +44,9 @@ export const initControl = ({ camera, renderer }: Scene) => {
   });
   renderer.canvas.addEventListener('wheel', (e) => {
     const dt = Date.now() - mouse.t;
-    const df = e.deltaY * dt / 100;
+    const ds = e.deltaY * dt / 100;
 
-    camera.scale(df, df, df);
+    camera.scale(ds, ds, ds);
     mouse.t += dt;
   });
 };

@@ -104,7 +104,7 @@ export class Geometry extends RenderableObject<GeometryData> {
     const colorBuffer = renderer.createVertexBuffer(new Float32Array(color));
     const vertexBuffer = renderer.createVertexBuffer(new Float32Array(vertex));
     const pipeline = renderer.createRenderPipeline(ShaderType.LIGHT);
-    const mvpUniformBuffer = renderer.createUniformBuffer(mvpMat.data.byteLength);
+    const mvpUniformBuffer = renderer.createUniformBuffer(mvpMat.elements.byteLength);
     const mvpBindGroup = renderer.device.createBindGroup({
       layout: pipeline.getBindGroupLayout(0),
       entries: [{
@@ -112,14 +112,14 @@ export class Geometry extends RenderableObject<GeometryData> {
         resource: {
           buffer: mvpUniformBuffer,
           offset: 0,
-          size: mvpMat.data.byteLength,
+          size: mvpMat.elements.byteLength,
         },
       }],
     });
 
     return (renderPassEncoder: GPURenderPassEncoder) => {
       Matrix4.mul(mvpMat, camera.matrix, this.modelMat);
-      renderer.device.queue.writeBuffer(mvpUniformBuffer, 0, mvpMat.data);
+      renderer.device.queue.writeBuffer(mvpUniformBuffer, 0, mvpMat.elements.buffer);
       renderPassEncoder.setPipeline(pipeline);
       renderPassEncoder.setBindGroup(0, mvpBindGroup);
       renderPassEncoder.setVertexBuffer(ShaderLocation.COLOR, colorBuffer);
