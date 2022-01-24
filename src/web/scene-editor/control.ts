@@ -58,7 +58,7 @@ export const initControl = (scene: Scene) => {
   renderer.canvas.addEventListener('wheel', (e) => {
     const object = selectedObject || camera;
     const dt = Date.now() - mouse.t;
-    const ds = e.deltaY * dt / 100;
+    const ds = 1 - e.deltaY / (dt * 100);
 
     object.scale(ds, ds, ds);
     mouse.t += dt;
