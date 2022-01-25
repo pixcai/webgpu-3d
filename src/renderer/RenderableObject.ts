@@ -11,12 +11,18 @@ export enum RenderableObjectKind {
   GEOMETRY_3D,
 }
 
+export enum RenderableObjectMode {
+  DEFAULT,
+  TEXTURE,
+}
+
 let globalObjectId = 0;
 
 export type RenderTask = (renderPassEncoder: GPURenderPassEncoder) => void;
 
 export abstract class RenderableObject<T extends RenderableData = RenderableData> {
   readonly objectId = ++globalObjectId;
+  protected mode = RenderableObjectMode.DEFAULT;
   
   protected data: T;
   readonly kind: RenderableObjectKind;

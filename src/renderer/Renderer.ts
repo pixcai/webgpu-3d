@@ -41,19 +41,26 @@ export default class Renderer {
     });
   };
 
+  pipelineCaches: Map<ShaderType, GPURenderPipeline> = new Map();
+
   createRenderPipeline = (type: ShaderType, primitive?: GPUPrimitiveState) => {
     const { vertex, fragment } = createShader(this, type);
+    let pipeline = this.pipelineCaches.get(type);
 
-    return this.device.createRenderPipeline({
-      vertex,
-      fragment,
-      primitive,
-      depthStencil: {
-        depthWriteEnabled: true,
-        depthCompare: 'less',
-        format: this.depthTextureFormat,
-      },
-    });
+    if (!pipeline) {
+      pipeline = this.device.createRenderPipeline({
+        vertex,
+        fragment,
+        primitive,
+        depthStencil: {
+          depthWriteEnabled: true,
+          depthCompare: 'less',
+          format: this.depthTextureFormat,
+        },
+      });
+      this.pipelineCaches.set(type, pipeline);
+    }
+    return pipeline;
   };
 
   beginRenderTask = (renderTask: RenderTask) => {

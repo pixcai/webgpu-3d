@@ -6,6 +6,8 @@ export abstract class Camera {
 }
 
 export class PerspectiveCamera extends Camera {
+  readonly position = new Vector3();
+
   private viewMat = new Matrix4();
   private projectionMat = new Matrix4();
 
@@ -26,6 +28,9 @@ export class PerspectiveCamera extends Camera {
     const X = up.clone().cross(Z).normalize();
     const Y = Z.clone().cross(X).normalize();
 
+    this.position.x = position.x;
+    this.position.y = position.y;
+    this.position.z = position.z;
     Matrix4.mul(this.matrix, this.projectionMat, this.viewMat.set([
       X.x, Y.x, Z.x, 0,
       X.y, Y.y, Z.y, 0,

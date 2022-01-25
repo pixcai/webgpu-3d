@@ -79,6 +79,17 @@ export class Vector3 {
     return this;
   }
 
+  div(v: number) {
+    this.x = this.x / v || 0;
+    this.y = this.y / v || 0;
+    this.z = this.z / v || 0;
+    return this;
+  }
+
+  get buffer() {
+    return new Float32Array([this.x, this.y, this.z]).buffer;
+  }
+
   toString() {
     return `(${this.x.toFixed(7)}, ${this.y.toFixed(7)}, ${this.z.toFixed(7)})`;
   }
